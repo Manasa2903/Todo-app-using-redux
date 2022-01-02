@@ -4,32 +4,33 @@ import { addTodo } from "../redux";
 import TodoItem from "./TodoItem";
 
 const TodoList = ({ todoList, addTodo }) => {
-  const [isEdit, setIsEdit] = useState({ id: null, edit: false });
+  const [editId, setEditId] = useState(null);
   const [inputTodo, setInputTodo] = useState("");
   const [id, setId] = useState(1);
 
   const newTodo = {
     title: inputTodo,
     id,
+    isComplete: false,
   };
 
-  console.log(todoList);
   return (
-    <div>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        addTodo(newTodo);
+        setId((prevState) => prevState + 1);
+        setInputTodo("");
+      }}
+    >
       <input
         type="text"
         placeholder="Enter Title"
         value={inputTodo}
         onChange={(e) => setInputTodo(e.target.value)}
+        required
       />
-      <button
-        type="button"
-        onClick={() => {
-          addTodo(newTodo);
-          setId((prevState) => prevState + 1);
-          setInputTodo("");
-        }}
-      >
+      <button type="submit" disabled={editId}>
         Add
       </button>
       {todoList &&
@@ -39,11 +40,11 @@ const TodoList = ({ todoList, addTodo }) => {
             todo={todo}
             inputTodo={inputTodo}
             setInputTodo={setInputTodo}
-            isEdit={isEdit}
-            setIsEdit={setIsEdit}
+            editId={editId}
+            setEditId={setEditId}
           />
         ))}
-    </div>
+    </form>
   );
 };
 

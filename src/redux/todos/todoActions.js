@@ -8,6 +8,10 @@ export const addTodo = (newTodo) => {
     return { type: ADD_TODO, payload: newTodo };
 };
 
-export const updateTodo = (id, title) => {
-    return { type: UPDATE_TODO, payload: { id, title } };
+export const updateTodo = (todo) => {
+    return { type: UPDATE_TODO, payload: todo };
+};
+
+export const changeTodoStatus = (todo) => {
+    return { type: UPDATE_TODO, payload: todo };
 };

@@ -1,19 +1,36 @@
 import { connect } from "react-redux";
-import { useState } from "react";
-import { deleteTodo, updateTodo } from "../redux";
+import { deleteTodo, updateTodo, changeTodoStatus } from "../redux";
 
-const TodoItem = ({ ownProps, updateTodo, deleteTodo }) => {
-  const { todo, inputTodo, setInputTodo, isEdit, setIsEdit } = ownProps;
+const TodoItem = ({ ownProps, updateTodo, deleteTodo, changeTodoStatus }) => {
+  const { todo, inputTodo, setInputTodo, editId, setEditId } = ownProps;
+  const todoClass = todo.isComplete
+    ? "text-decoration-line-through"
+    : "text-decoration-line-none";
 
   return (
-    <div>
-      <p>{todo.title}</p>
-      <button onClick={() => deleteTodo(todo.id)}>Delete</button>
-      {isEdit.edit ? (
+    <div className="mt-3">
+      <input
+        type="checkbox"
+        id={`checkbox-${todo.id}`}
+        onChange={(e) => {
+          changeTodoStatus({ ...todo, isComplete: e.target.checked });
+        }}
+      />
+      <label
+        htmlFor={`checkbox-${todo.id}`}
+        className={`${todoClass} me-5 title-name ms-2`}
+      >
+        {todo.title}
+      </label>
+      <button onClick={() => deleteTodo(todo.id)} className="me-3">
+        Delete
+      </button>
+      {editId === todo.id ? (
         <button
           onClick={() => {
-            updateTodo(todo.id, inputTodo);
-            setIsEdit({ ...isEdit, edit: false });
+            updateTodo({ ...todo, title: inputTodo });
+            setEditId(null);
+            setInputTodo("");
           }}
         >
           Update
@@ -22,9 +39,9 @@ const TodoItem = ({ ownProps, updateTodo, deleteTodo }) => {
         <button
           onClick={() => {
             setInputTodo(todo.title);
-            setIsEdit({ id: todo.id, edit: true });
+            setEditId(todo.id);
           }}
-          disabled={todo.id === isEdit.id}
+          disabled={editId}
         >
           Edit
         </button>
@@ -33,10 +50,16 @@ const TodoItem = ({ ownProps, updateTodo, deleteTodo }) => {
   );
 };
 
+// const mapStateToProps = (state, ownProps) => ({
+//   ownProps
+// });
+
 const mapDispatchToProps = (dispatch, ownProps) => ({
   deleteTodo: (id) => dispatch(deleteTodo(id)),
   updateTodo: (id, inputTodo) => dispatch(updateTodo(id, inputTodo)),
-  ownProps: ownProps,
+  changeTodoStatus: (id, isComplete) =>
+    dispatch(changeTodoStatus(id, isComplete)),
+  ownProps,
 });
 
 export default connect(null, mapDispatchToProps)(TodoItem);
