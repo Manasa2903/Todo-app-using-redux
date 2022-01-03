@@ -18,6 +18,7 @@ const todoReducer = (state = initialState, action) => {
                     if (todo.id === action.payload.id) {
                         todo = action.payload;
                     }
+                    console.log(todo);
                     return todo;
                 }),
             };

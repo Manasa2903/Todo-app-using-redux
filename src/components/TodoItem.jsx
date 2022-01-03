@@ -28,7 +28,7 @@ const TodoItem = ({ ownProps, updateTodo, deleteTodo, changeTodoStatus }) => {
       {editId === todo.id ? (
         <button
           onClick={() => {
-            updateTodo({ ...todo, title: inputTodo });
+            updateTodo(todo.id, inputTodo);
             setEditId(null);
             setInputTodo("");
           }}
@@ -56,10 +56,9 @@ const TodoItem = ({ ownProps, updateTodo, deleteTodo, changeTodoStatus }) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   deleteTodo: (id) => dispatch(deleteTodo(id)),
-  updateTodo: (id, inputTodo) => dispatch(updateTodo(id, inputTodo)),
-  changeTodoStatus: (id, isComplete) =>
-    dispatch(changeTodoStatus(id, isComplete)),
-  ownProps,
+  updateTodo: (id, title) => dispatch(updateTodo(id, title)),
+  changeTodoStatus: (todo) => dispatch(changeTodoStatus(todo)),
+  ownProps: ownProps,
 });
 
 export default connect(null, mapDispatchToProps)(TodoItem);
